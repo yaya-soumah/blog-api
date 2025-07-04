@@ -5,9 +5,9 @@ import {
   getCommentsByPost,
   updateComment,
   deleteComment,
-} from '../controllers/comment.controller'
-import { validate } from '../middleware/validate'
-import { createCommentSchema, updateCommentSchema } from '../validators/comment.schema'
+} from '../controllers/comment.controller.js'
+import { validate } from '../middleware/validate.js'
+import { createCommentSchema, updateCommentSchema } from '../validators/comment.schema.js'
 
 const router = Router()
 
