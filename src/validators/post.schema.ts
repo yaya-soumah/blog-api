@@ -9,12 +9,12 @@ export const getPostsSchema = z.object({
   page: z
     .string()
     .transform(Number)
-    .refine(val => val > 0, { message: 'Page must be greater than 0' })
+    .refine((val) => val > 0, { message: 'Page must be greater than 0' })
     .optional(),
   limit: z
     .string()
     .transform(Number)
-    .refine(val => val > 0, { message: 'Limit must be greater than 0' })
+    .refine((val) => val > 0, { message: 'Limit must be greater than 0' })
     .optional(),
   search: z.string().optional(),
 })

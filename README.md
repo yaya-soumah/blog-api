@@ -35,7 +35,7 @@ A fully-featured RESTful Blog API built with **Node.js**, **TypeScript**, **Expr
 
 ## Installation
 
-```bash
+````bash
 git clone https://github.com/yaya-soumah/blog-api.git
 cd blog-api
 
@@ -60,21 +60,25 @@ ACCESS_TOKEN_EXPIRES_IN=1d
 REFRESH_TOKEN_EXPIRES_IN=7d
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
-```
+````
 
 # Build the project
+
 npm run build
 
 # Run the dev server
+
 npm run dev
-```
+
+````
 
 # API Documentation
 Swagger UI available at:
 
 ```bash
 GET http://localhost:8080/docs
-```
+````
 
 # Author
-Yaya Soumah — [LinkedIn](www.linkedin.com/in/yaya-soumah-11b75b1b9) | Backend Developer 
+
+Yaya Soumah — [LinkedIn](www.linkedin.com/in/yaya-soumah-11b75b1b9) | Backend Developer

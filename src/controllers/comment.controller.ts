@@ -1,16 +1,16 @@
-import {Request, Response, NextFunction} from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { CommentService } from '../services/comment.service.js'
 
-export const createComment = async (req: Request, res: Response, next: NextFunction)=>{
-    try {
-        const {content, postId} = req.body
-        const userId = (req as any).user.userId
-        
-        const comment = await CommentService.addComment(userId,postId,content)
-        res.status(201).json(comment)
-    } catch (err){
-        next(err)
-    }
+export const createComment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { content, postId } = req.body
+    const userId = (req as any).user.userId
+
+    const comment = await CommentService.addComment(userId, postId, content)
+    res.status(201).json(comment)
+  } catch (err) {
+    next(err)
+  }
 }
 
 export const getCommentsByPost = async (req: Request, res: Response, next: NextFunction) => {

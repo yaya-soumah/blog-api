@@ -14,8 +14,6 @@ import {
 import bcrypt from 'bcrypt'
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from 'sequelize'
 
-
-
 @Table({
   tableName: 'users',
   timestamps: true,
@@ -45,17 +43,17 @@ export class User extends Model<
   @AllowNull(false)
   @Column({
     type: DataType.STRING,
-    defaultValue: 'user'
-  })  
+    defaultValue: 'user',
+  })
   role!: 'user' | 'admin'
 
   @HasMany(() => Post)
   posts!: NonAttribute<Post[]>
 
-  @HasMany(()=> Comment)
+  @HasMany(() => Comment)
   comments!: NonAttribute<Comment[]>
 
-  @HasMany(()=>Like)
+  @HasMany(() => Like)
   likes!: NonAttribute<Like[]>
 
   @BeforeCreate
@@ -63,7 +61,7 @@ export class User extends Model<
   static async hashPassword(instance: User) {
     if (instance.changed('password')) {
       const saltRounds = 10
-      instance.password = await bcrypt.hash(instance.password,saltRounds)
+      instance.password = await bcrypt.hash(instance.password, saltRounds)
     }
   }
 
@@ -72,7 +70,4 @@ export class User extends Model<
   }
 }
 
-import { Comment, Post, Like } from "./index.js";
-
-
-
+import { Comment, Post, Like } from './index.js'

@@ -38,11 +38,11 @@ export class Post extends Model<
   @BelongsTo(() => User)
   author!: NonAttribute<User>
 
-  @HasMany(()=> Comment)
+  @HasMany(() => Comment)
   comments!: NonAttribute<Comment[]>
-  
-  @HasMany(()=>Like)
+
+  @HasMany(() => Like)
   likes!: NonAttribute<Like[]>
 }
 
-import { Comment, User, Like } from "./index.js";
+import { Comment, User, Like } from './index.js'

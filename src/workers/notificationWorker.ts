@@ -4,7 +4,7 @@ import { Notification } from '../models/index.js'
 
 const worker = new Worker(
   'notifications',
-  async job => {
+  async (job) => {
     const { recipientId, senderName, target } = job.data
     const message = `${senderName} liked your ${target}`
 

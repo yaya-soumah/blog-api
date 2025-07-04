@@ -14,8 +14,8 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUserRole = async (req: Request, res: Response) => {
   const id = parseInt(req.params.id)
-  
-  const {  role } = req.body
+
+  const { role } = req.body
   const user = await UserServices.updqateUserRole(id, role)
   res.status(201).json(user)
 }

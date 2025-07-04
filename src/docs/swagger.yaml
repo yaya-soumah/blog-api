@@ -64,7 +64,7 @@ components:
           type: number
         coomentId:
           type: number
-          nullable: true          
+          nullable: true
 
     LoginInput:
       type: object
@@ -112,15 +112,15 @@ paths:
         '200':
           description: Logged in successfully
   /auth/refresh:
-    post: 
+    post:
       summary: get new access token
       requestBody:
         required: false
       responses:
         '200':
-          description: new access token 
+          description: new access token
   /auth/logout:
-    post: 
+    post:
       summary: get new access token
       requestBody:
         required: false
@@ -242,7 +242,7 @@ paths:
           name: postId
           required: true
           schema:
-            type: string      
+            type: string
       responses:
         '200':
           description: all comments
@@ -283,7 +283,7 @@ paths:
       responses:
         '204':
           description: Comment deleted
-      
+
   /likes/{postId}:
     post:
       summary: Like or unlike a post
@@ -295,7 +295,7 @@ paths:
           required: true
           schema:
             type: string
-      
+
       responses:
         '200':
     get:
@@ -308,7 +308,7 @@ paths:
           required: true
           schema:
             type: string
-      
+
       responses:
         '200':
   /likes/post/{postId}/user:
@@ -347,6 +347,6 @@ paths:
           name: commentId
           required: true
           schema:
-            type: string      
+            type: string
       responses:
         '200':

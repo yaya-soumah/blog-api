@@ -12,7 +12,7 @@ import { createCommentSchema, updateCommentSchema } from '../validators/comment.
 const router = Router()
 
 router.get('/post/:postId', getCommentsByPost)
-router.post('/',validate(createCommentSchema), createComment)
+router.post('/', validate(createCommentSchema), createComment)
 router.put('/:id', validate(updateCommentSchema), updateComment)
 router.delete('/:id', deleteComment)
 
