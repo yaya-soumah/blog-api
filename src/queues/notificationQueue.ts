@@ -4,12 +4,21 @@ import { config } from 'dotenv'
 
 config()
 
-export const connection = new IORedis({
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: Number(process.env.REDIS_PORT) || 6379,
-  maxRetriesPerRequest: null,
-})
+let connection: IORedis | null = null
+let notificationQueue: Queue | null = null
 
-export const notificationQueue = new Queue('notifications', {
-  connection,
-})
+if (process.env.NODE_ENV !== 'production') {
+  connection = new IORedis({
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: Number(process.env.REDIS_PORT) || 6379,
+    maxRetriesPerRequest: null,
+  })
+
+  notificationQueue = new Queue('notifications', {
+    connection,
+  })
+} else {
+  console.log('Redis disabled in production')
+}
+
+export { connection, notificationQueue }

@@ -4,6 +4,7 @@ import cors from 'cors'
 import { config } from 'dotenv'
 import cookieParser from 'cookie-parser'
 import sequelize from './config/database.js'
+import { connection as redisConnection } from './queues/notificationQueue.js'
 import { authenticateToken } from './middleware/auth.js'
 import userRouter from './routes/user.routes.js'
 import postRouter from './routes/post.routes.js'
@@ -38,6 +39,14 @@ async function startServer() {
     await sequelize.authenticate()
     await sequelize.sync({ alter: true }) // dev only
     console.log('Database connected')
+    if (process.env.NODE_ENV !== 'production') {
+      if (redisConnection?.status === 'ready') {
+        console.log('Redis connected for background jobs')
+      } else {
+        console.log('Redis is not connected or unavailable')
+      }
+    }
+
     app.listen(PORT, () => {
       console.log(`Server listening on http://localhost:${PORT}`)
     })

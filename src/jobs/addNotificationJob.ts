@@ -7,5 +7,9 @@ type NotificationPayload = {
 }
 
 export async function addNotificationJob(payload: NotificationPayload) {
-  await notificationQueue.add('new-like', payload)
+  if (notificationQueue) {
+    await notificationQueue.add('new-like', payload)
+  } else {
+    console.log('📭 Notification skipped — no queue available (prod)')
+  }
 }
