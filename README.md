@@ -70,6 +70,7 @@ npm run build
 
 npm run dev
 
+// Make sure that Redis server is running
 ````
 
 # API Documentation

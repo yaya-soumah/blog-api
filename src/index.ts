@@ -37,9 +37,10 @@ app.use('/api/likes', likeRouter)
 async function startServer() {
   try {
     await sequelize.authenticate()
-    await sequelize.sync({ alter: true }) // dev only
+     // dev only
     console.log('Database connected')
     if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({ alter: true })
       if (redisConnection?.status === 'ready') {
         console.log('Redis connected for background jobs')
       } else {
