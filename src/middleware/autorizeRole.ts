@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import { AppError } from '../utils/app.error'
+import { AppError } from '../utils/app.error.js'
 
 export const adminOnly =
   (role: 'admin') => async (req: Request, res: Response, next: NextFunction) => {
