@@ -1,0 +1,507 @@
+openapi: 3.0.0
+info:
+  title: Blog API
+  version: 1.0.0
+  description: API for a full-featured blog system built with Node.js, TypeScript, and Sequelize
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Development server
+  - url: https://blog-api-u0gb.onrender.com/api/v1
+    description: Production server
+
+tags:
+  - name: Auth
+    description: User authentication and token management
+  - name: Users
+    description: Public and authenticated user profile operations
+  - name: Posts
+    description: Create , update, delete, retrieve posts
+  - name: Comments
+    description: Create, update, delete, comment a post or comment a comment
+  - name: Likes
+    description: Like and unlike posts and comments
+  - name: Notifications
+    description: Read and list notifications
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user with user role
+      parameters:
+        - in: query
+          name: role
+          description: Register a new user with admin role
+          required: false
+          type: string
+          enum: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: User registered
+        '400':
+          description: Validation error
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login with credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: login successful
+        '400':
+          description: Invalid credentials
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token,
+      responses:
+        '200':
+          description: Token refreshed successfully
+        '400':
+          description: Invalid refresh token
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: logout user
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: logout successfully
+
+  /users:
+    get:
+      tags: [Users]
+      summary: Get list of users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+          default: 1
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          default: 10
+        - in: query
+          name: q
+          description: Filter by name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: operation successful
+        '401':
+          description: Access denied. No token provided
+        '403':
+          description: Invalid or expired token
+
+  /users/profile:
+    get:
+      tags: [Users]
+      summary: Get user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile retrieved
+        '401':
+          description: Access denied. No token provided
+        '403':
+          description: Invalid or expired token
+        '404':
+          description: User not found
+  /users/{id}/role:
+    put:
+      tags: [Users]
+      summary: Update role (admin only),
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        require: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role:
+                  type: string
+      responses:
+        '200':
+          description: Role updated
+        '400':
+          description: Validation error
+        '401':
+          description: Access denied. No token provided
+        '403':
+          description: Invalid or expired token
+        '404':
+          description: User not found
+
+  /posts:
+    post:
+      tags: [Posts]
+      summary: Create new post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+        application/json:
+          schema:
+            type: object
+            required: [title, content]
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+      responses:
+        '200':
+          description: post created
+        '400':
+          description: Validation error
+        '401':
+          description: Access denied. No token provided
+        '403':
+          description: Invalid or expired token
+    get:
+      tags: [Posts]
+      summary: Get list of posts
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+          default: 1
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+          default: 10
+        - in: query
+          name: q
+          description: Filter by title or content
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: operation successful
+        '401':
+          description: Access denied. No token provided
+        '403':
+          description: Invalid or expired token
+
+  /posts/{id}:
+    delete:
+      tags: [Posts]
+      summary: remove a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Post deleted
+    put:
+      tags: [Posts]
+      summary: Update a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Comment updated
+  /comments:
+    post:
+      tags: [Comments]
+      summary: Add a comment to a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Comment added
+  /comments/post/{postId}:
+    get:
+      tags: [Comments]
+      summary: get a list of comments of a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: all comments
+  /comments/{id}:
+    put:
+      tags: [Comments]
+      summary: Update a comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: Comment updated
+    delete:
+      tags: [Comments]
+      summary: remove a comment from a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Comment deleted
+
+  /likes/{postId}:
+    post:
+      tags: [Likes]
+      summary: Like or unlike a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+    get:
+      tags: [Likes]
+      summary: Get list of Likes of a post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+  /likes/post/{postId}/user:
+    get:
+      tags: [Likes]
+      summary: Get user who liked the post
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Post liked
+  /likes/comment/{commentId}:
+    post:
+      tags: [Likes]
+      summary: like and unlike a comment
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /likes/comment/{commentId}/users:
+    get:
+      tags: [Likes]
+      summary: Get list of users who Liked of a comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+        createdAt:
+          type: string
+          format: date-time
+    Post:
+      type: object
+      properties:
+        id:
+          type: number
+        content:
+          type: string
+        authorId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    Comment:
+      type: object
+      properties:
+        id:
+          type: number
+        content:
+          type: string
+        postId:
+          type: string
+        userId:
+          type: string
+    Like:
+      type: object
+      properties:
+        id:
+          type: number
+        userId:
+          type: number
+        postId:
+          type: number
+        commentId:
+          type: number
+          nullable: true
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    RegisterInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
